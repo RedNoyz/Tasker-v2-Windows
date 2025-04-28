@@ -5,9 +5,14 @@
 	"description": "A minimal Electron app",
 	"main": "main.js",
 	"scripts": {
-		"start": "electron ."
+		"start": "electron .",
+		"rebuild": "electron-rebuild"
 	},
 	"devDependencies": {
-		"electron": "^29.0.0"
+		"electron": "^29.0.0",
+		"electron-rebuild": "^3.2.9"
+	},
+	"dependencies": {
+		"better-sqlite3": "^11.9.1"
 	}
 }

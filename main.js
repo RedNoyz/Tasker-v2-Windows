@@ -1,10 +1,33 @@
 const path = require("path");
 const { app, BrowserWindow, globalShortcut, ipcMain } = require("electron");
+const Database = require("better-sqlite3");
 
 let task_window_open = false;
 
 let main_window;
 let task_window;
+
+let data_base;
+
+function initializeDatabase() {
+	const data_base_path = path.join(__dirname, "tasks.db");
+
+	data_base = new Database(data_base_path);
+
+	data_base
+		.prepare(
+			`CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            due_date TIMESTAMP,
+            created_at TIMESTAMP DEFAULT (datetime('now', 'localtime')),
+            notified INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'open',
+            complete_date TIMESTAMP,
+            snooze_counter INTEGER DEFAULT 0)`
+		)
+		.run();
+}
 
 function createMainWindow() {
 	main_window = new BrowserWindow({
@@ -27,6 +50,7 @@ function createMainWindow() {
 }
 
 app.whenReady().then(() => {
+	initializeDatabase();
 	createMainWindow();
 });
 

@@ -3,3 +3,4 @@ dist/
 out/
 build/
 *.log
+tasks.db
