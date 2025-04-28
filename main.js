@@ -1,7 +1,6 @@
 const path = require("path");
 const { app, BrowserWindow, globalShortcut, ipcMain } = require("electron");
 const Database = require("better-sqlite3");
-const { autoUpdater } = require("electron-updater");
 
 let task_window_open = false;
 
@@ -60,14 +59,14 @@ app.whenReady().then(() => {
 		autoUpdater.checkForUpdatesAndNotify();
 
 		autoUpdater.on("update-available", () => {
-			console.log("Update available!");
+			console.log("🔄 Update available!");
 		});
 
 		autoUpdater.on("update-downloaded", () => {
-			console.log("Update downloaded, will install on quit.");
+			console.log("✅ Update downloaded, will install on quit.");
 		});
 	} else {
-		console.log("Running in development mode. Auto-updater disabled.");
+		console.log("🛠 Development mode detected. AutoUpdater disabled.");
 	}
 });
 
