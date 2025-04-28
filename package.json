@@ -1,16 +1,50 @@
 {
-	"name": "my-electron-app",
+	"name": "cant-miss-it-reminders",
 	"productName": "Can't Miss It - Reminders",
 	"version": "1.0.0",
 	"description": "A minimal Electron app",
+	"author": "RedNoyz",
 	"main": "main.js",
 	"scripts": {
 		"start": "electron .",
-		"rebuild": "electron-rebuild"
+		"rebuild": "electron-rebuild",
+		"build": "electron-builder"
+	},
+	"build": {
+		"appId": "com.rednoyz.cantmissit",
+		"productName": "Can't Miss It - Reminders",
+		"directories": {
+			"output": "dist"
+		},
+		"files": [
+			"**/*",
+			"!dist/",
+			"!node_modules/",
+			"node_modules/better-sqlite3/**"
+		],
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "RedNoyz",
+				"repo": "Tasker-v2-Windows"
+			}
+		],
+		"win": {
+			"target": [
+				"nsis"
+			]
+		},
+		"nsis": {
+			"oneClick": false,
+			"perMachine": false,
+			"allowToChangeInstallationDirectory": true
+		}
 	},
 	"devDependencies": {
 		"electron": "^29.0.0",
-		"electron-rebuild": "^3.2.9"
+		"electron-builder": "^26.0.12",
+		"electron-rebuild": "^3.2.9",
+		"electron-updater": "^6.1.1"
 	},
 	"dependencies": {
 		"better-sqlite3": "^11.9.1"
