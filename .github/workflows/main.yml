@@ -25,31 +25,13 @@ jobs:
           npm install
           npm run rebuild
 
-      # - name: 🔎 Extract version from package.json
-      #   id: get_version
-      #   run: |
-      #     echo "version=$(node -p "require('./package.json').version")" >> $env:GITHUB_ENV
-
-      # - name: 🔎 Verify version matches GitHub Release tag
-      #   run: |
-      #     $expectedTag = "v${{ env.version }}"
-      #     $actualTag = "${{ github.event.release.tag_name }}"
-      #     echo "Expected tag: $expectedTag"
-      #     echo "Actual tag:   $actualTag"
-      #     if ($expectedTag -ne $actualTag) {
-      #       Write-Error "❌ Version mismatch: package.json version $expectedTag vs release tag $actualTag"
-      #       exit 1
-      #     }
-
       - name: 🔨 Build Electron App
-        run: |
-          npm run build || npm run make  # depending on how you are building
+        run: npm run build
 
-      - name: 📦 Zip output
+      - name: 🔍 Find built files
+        id: find_files
         run: |
-          mkdir bundle
-          Copy-Item "dist/**" -Destination bundle/ -Recurse
-          Compress-Archive -Path bundle/* -DestinationPath dist/Tasker.zip
+          echo "setup_exe=$(Get-ChildItem -Path dist -Filter '* - Setup*.exe' | Select-Object -First 1 | ForEach-Object { $_.FullName })" >> $env:GITHUB_ENV
 
       - name: 🚀 Upload assets to GitHub Release
         uses: softprops/action-gh-release@v1
@@ -58,7 +40,7 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           files: |
-            dist/Tasker.zip
-          name: Tasker
+            ${{ env.setup_exe }}
+          name: Can't Miss It - Reminders v${{ github.event.release.tag_name }}
           draft: false
           prerelease: ${{ github.event.release.prerelease }}
