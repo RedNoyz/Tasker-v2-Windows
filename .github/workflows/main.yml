@@ -1,0 +1,64 @@
+name: Build and Upload Electron App
+
+permissions:
+  contents: write
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-upload:
+    runs-on: windows-latest
+
+    steps:
+      - name: 📥 Check out repository
+        uses: actions/checkout@v3
+
+      - name: 🧩 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: 📦 Install npm dependencies
+        run: |
+          npm install
+          npm run rebuild
+
+      # - name: 🔎 Extract version from package.json
+      #   id: get_version
+      #   run: |
+      #     echo "version=$(node -p "require('./package.json').version")" >> $env:GITHUB_ENV
+
+      # - name: 🔎 Verify version matches GitHub Release tag
+      #   run: |
+      #     $expectedTag = "v${{ env.version }}"
+      #     $actualTag = "${{ github.event.release.tag_name }}"
+      #     echo "Expected tag: $expectedTag"
+      #     echo "Actual tag:   $actualTag"
+      #     if ($expectedTag -ne $actualTag) {
+      #       Write-Error "❌ Version mismatch: package.json version $expectedTag vs release tag $actualTag"
+      #       exit 1
+      #     }
+
+      - name: 🔨 Build Electron App
+        run: |
+          npm run build || npm run make  # depending on how you are building
+
+      - name: 📦 Zip output
+        run: |
+          mkdir bundle
+          Copy-Item "dist/**" -Destination bundle/ -Recurse
+          Compress-Archive -Path bundle/* -DestinationPath dist/Tasker.zip
+
+      - name: 🚀 Upload assets to GitHub Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            dist/Tasker.zip
+          name: Tasker
+          draft: false
+          prerelease: ${{ github.event.release.prerelease }}
