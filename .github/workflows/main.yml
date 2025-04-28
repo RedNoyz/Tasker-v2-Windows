@@ -18,7 +18,7 @@ jobs:
       - name: 🧩 Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: "22.15.0"
 
       - name: 📦 Install npm dependencies
         run: |
@@ -26,12 +26,16 @@ jobs:
           npm run rebuild
 
       - name: 🔨 Build Electron App
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build
 
-      - name: 🔍 Find built files
-        id: find_files
+      - name: 📦 Create a versioned ZIP of dist contents
+        shell: pwsh
         run: |
-          echo "setup_exe=$(Get-ChildItem -Path dist -Filter '* - Setup*.exe' | Select-Object -First 1 | ForEach-Object { $_.FullName })" >> $env:GITHUB_ENV
+          $version = "${{ github.event.release.tag_name }}"
+          $cleanVersion = $version.TrimStart("v")  # Remove "v" prefix if needed
+          Compress-Archive -Path dist\* -DestinationPath dist\cant-miss-it-$cleanVersion.zip
 
       - name: 🚀 Upload assets to GitHub Release
         uses: softprops/action-gh-release@v1
@@ -39,8 +43,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.release.tag_name }}
-          files: |
-            ${{ env.setup_exe }}
           name: Can't Miss It - Reminders ${{ github.event.release.tag_name }}
           draft: false
           prerelease: ${{ github.event.release.prerelease }}
+          files: |
+            dist/*.exe
+            dist/*.blockmap
+            dist/latest.yml
+            dist/cant-miss-it-*.zip
