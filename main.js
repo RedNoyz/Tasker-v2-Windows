@@ -52,8 +52,23 @@ function createMainWindow() {
 
 app.whenReady().then(() => {
 	initializeDatabase();
-	autoUpdater.checkForUpdatesAndNotify();
 	createMainWindow();
+
+	if (app.isPackaged) {
+		const { autoUpdater } = require("electron-updater");
+
+		autoUpdater.checkForUpdatesAndNotify();
+
+		autoUpdater.on("update-available", () => {
+			console.log("Update available!");
+		});
+
+		autoUpdater.on("update-downloaded", () => {
+			console.log("Update downloaded, will install on quit.");
+		});
+	} else {
+		console.log("Running in development mode. Auto-updater disabled.");
+	}
 });
 
 function createNewTaskWindow() {
