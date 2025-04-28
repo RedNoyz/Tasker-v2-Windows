@@ -41,6 +41,6 @@ jobs:
           tag_name: ${{ github.event.release.tag_name }}
           files: |
             ${{ env.setup_exe }}
-          name: Can't Miss It - Reminders v${{ github.event.release.tag_name }}
+          name: Can't Miss It - Reminders ${{ github.event.release.tag_name }}
           draft: false
           prerelease: ${{ github.event.release.prerelease }}
