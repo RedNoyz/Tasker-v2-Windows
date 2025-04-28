@@ -1,0 +1,13 @@
+{
+	"name": "my-electron-app",
+	"productName": "Can't Miss It - Reminders",
+	"version": "1.0.0",
+	"description": "A minimal Electron app",
+	"main": "main.js",
+	"scripts": {
+		"start": "electron ."
+	},
+	"devDependencies": {
+		"electron": "^29.0.0"
+	}
+}
