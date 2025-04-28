@@ -68,6 +68,22 @@ app.whenReady().then(() => {
 	} else {
 		console.log("🛠 Development mode detected. AutoUpdater disabled.");
 	}
+
+	autoUpdater.on("update-available", () => {
+		dialog.showMessageBox({
+			type: "info",
+			title: "Update Available",
+			message: "A new version is available. Downloading now...",
+		});
+	});
+
+	autoUpdater.on("update-downloaded", () => {
+		dialog.showMessageBox({
+			type: "info",
+			title: "Update Ready",
+			message: "Update downloaded. It will be installed on restart.",
+		});
+	});
 });
 
 function createNewTaskWindow() {
@@ -104,20 +120,4 @@ ipcMain.on("open-new-task-window", () => {
 
 app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") app.quit();
-});
-
-autoUpdater.on("update-available", () => {
-	dialog.showMessageBox({
-		type: "info",
-		title: "Update Available",
-		message: "A new version is available. Downloading now...",
-	});
-});
-
-autoUpdater.on("update-downloaded", () => {
-	dialog.showMessageBox({
-		type: "info",
-		title: "Update Ready",
-		message: "Update downloaded. It will be installed on restart.",
-	});
 });
