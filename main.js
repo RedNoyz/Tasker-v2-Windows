@@ -59,11 +59,19 @@ app.whenReady().then(() => {
 		autoUpdater.checkForUpdatesAndNotify();
 
 		autoUpdater.on("update-available", () => {
-			console.log("🔄 Update available!");
+			dialog.showMessageBox({
+				type: "info",
+				title: "Update Available",
+				message: "A new version is available. Downloading now...",
+			});
 		});
 
 		autoUpdater.on("update-downloaded", () => {
-			console.log("✅ Update downloaded, will install on quit.");
+			dialog.showMessageBox({
+				type: "info",
+				title: "Update Ready",
+				message: "Update downloaded. It will be installed on restart.",
+			});
 		});
 	} else {
 		console.log("🛠 Development mode detected. AutoUpdater disabled.");
