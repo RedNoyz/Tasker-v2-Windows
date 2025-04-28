@@ -1,6 +1,7 @@
 const path = require("path");
 const { app, BrowserWindow, globalShortcut, ipcMain } = require("electron");
 const Database = require("better-sqlite3");
+const { autoUpdater } = require("electron-updater");
 
 let task_window_open = false;
 
@@ -51,6 +52,7 @@ function createMainWindow() {
 
 app.whenReady().then(() => {
 	initializeDatabase();
+	autoUpdater.checkForUpdatesAndNotify();
 	createMainWindow();
 });
 
