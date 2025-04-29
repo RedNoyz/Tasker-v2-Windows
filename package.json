@@ -1,7 +1,7 @@
 {
 	"name": "cant-miss-it-reminders",
 	"productName": "Can't Miss It - Reminders",
-	"version": "0.1.10",
+	"version": "0.1.11",
 	"description": "A minimal Electron app",
 	"author": "RedNoyz",
 	"main": "main.js",
