@@ -8,19 +8,26 @@
 	"scripts": {
 		"start": "electron .",
 		"rebuild": "electron-rebuild",
-		"build": "electron-builder"
+		"build": "electron-builder",
+		"postinstall": "electron-builder install-app-deps"
 	},
 	"build": {
 		"appId": "com.rednoyz.cantmissit",
 		"productName": "Can't Miss It - Reminders",
+		"asar": false,
 		"directories": {
 			"output": "dist"
 		},
 		"files": [
-			"**/*",
+			"main.js",
+			"renderer/**/*",
+			"assets/**/*",
+			"node_modules/better-sqlite3/**/*",
 			"!dist/",
-			"!node_modules/",
-			"node_modules/better-sqlite3/**"
+			"!*.log",
+			"!*.md",
+			"!test/",
+			"package.json"
 		],
 		"publish": [
 			{
